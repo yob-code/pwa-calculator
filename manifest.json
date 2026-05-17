@@ -1,7 +1,7 @@
 {
   "name": "calculator",
-  "short_name": "calculator",
-  "description": "関数電卓 Canon F-715SG",
+  "short_name": "pwa-calculator",
+  "description": "関数電卓",
   "start_url": "./calculator.html",
   "display": "standalone",
   "orientation": "portrait",
