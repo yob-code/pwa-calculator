@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="calculator">
+<meta name="theme-color" content="#f0f0f0">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>calculator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{
+  width:100%;height:100%;
+  background:#e8e8e8;
+  display:flex;align-items:flex-start;justify-content:center;
+  overflow:hidden;
+  touch-action:none;
+}
+#scaleRoot{
+  transform-origin:top left;
+  position:absolute;top:0;left:0;
+}
+.calc{
+  background:#f0f0f0;
+  border-radius:12px 12px 20px 20px;
+  padding:10px 12px 18px;
+  width:320px;
+  display:flex;
+  flex-direction:column;
+  border:2px solid #ccc;
+  box-shadow:0 8px 32px rgba(0,0,0,0.25);
+}
+.top-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:5px;flex-shrink:0;
+}
+.brand-l{color:#666;font-size:10px;font-style:italic;letter-spacing:2px;font-family:serif}
+.brand-r{color:#444;font-size:10px;letter-spacing:2px;font-family:sans-serif}
+.solar{
+  background:repeating-linear-gradient(90deg,#b0b8d0 0px,#b0b8d0 18px,#9098b8 18px,#9098b8 20px);
+  height:13px;border-radius:2px;margin-bottom:6px;border:1px solid #aaa;
+  flex-shrink:0;
+}
+.disp{
+  background:#d4e8d4;
+  border-radius:6px;
+  padding:7px 10px 6px;
+  margin-bottom:8px;
+  border:2px solid #8aaa8a;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.12);
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.disp-history{
+  flex:1;display:flex;flex-direction:column;
+  justify-content:flex-end;overflow:hidden;
+  min-height:0;margin-bottom:3px;
+}
+.hist-item{
+  font-family:'Courier New',monospace;font-size:11px;
+  color:#4a7a4a;text-align:right;line-height:1.55;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  padding:0 2px;opacity:0.75;
+}
+.hist-item+.hist-item{opacity:0.88}
+.hist-item:last-child{
+  opacity:1;color:#2a5a2a;
+  border-top:1px solid rgba(0,0,0,0.1);
+  padding-top:2px;margin-top:2px;
+}
+.disp-current{flex-shrink:0}
+.disp-flags{
+  display:flex;gap:7px;font-size:9px;color:#3a5a3a;
+  font-family:'Courier New',monospace;min-height:13px;font-weight:600;
+}
+.disp-expr{
+  font-family:'Courier New',monospace;font-size:16px;color:#1a3a1a;
+  min-height:20px;text-align:right;word-break:break-all;
+  line-height:1.3;overflow:hidden;max-height:40px;margin-top:1px;
+}
+.disp-main{
+  font-family:'Courier New',monospace;font-size:38px;color:#0a200a;
+  text-align:right;min-height:44px;line-height:1.1;
+  letter-spacing:2px;font-weight:700;margin-top:2px;
+}
+.cursor{
+  display:inline-block;width:1px;height:16px;
+  background:#1a3a1a;vertical-align:middle;
+  animation:blink 0.8s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.btn{
+  border:none;cursor:pointer;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  border-radius:4px;user-select:none;
+  line-height:1;padding:2px 1px;
+  box-shadow:0 2px 0 rgba(0,0,0,0.2),0 1px 2px rgba(0,0,0,0.1);
+  transition:box-shadow 0.06s,transform 0.06s,filter 0.06s;
+}
+.btn:active,.btn.pressed{
+  box-shadow:0 0px 0 rgba(0,0,0,0.2)!important;
+  transform:translateY(2px)!important;
+  filter:brightness(0.88)!important;
+}
+.sl{font-size:6.5px;min-height:8px;line-height:1;color:#aa7700}
+.al{font-size:6.5px;min-height:8px;line-height:1;color:#226622}
+.ml{font-size:9.5px;font-weight:700;line-height:1}
+.bl{font-size:6px;min-height:7px;line-height:1;color:#999}
+/* ホワイト版ボタンカラー */
+.c-dk{background:#dcdcec;color:#222}
+.c-bl{background:#4a80cc;color:#fff}
+.c-gy{background:#e8e8f0;color:#333}
+.c-or{background:#e06820;color:#fff}
+.c-re{background:#cc3333;color:#fff}
+.nav-ring{
+  display:grid;
+  grid-template-columns:26px 1fr 26px;
+  grid-template-rows:12px 26px 12px;
+  gap:2px;justify-items:center;align-items:center;
+}
+.nav-c{
+  background:radial-gradient(circle,#5588dd,#3366bb);
+  color:#fff;border-radius:50%;width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:7px;font-weight:700;cursor:pointer;border:none;
+  user-select:none;box-shadow:0 2px 4px rgba(0,0,0,0.25);
+}
+.nav-c:active{filter:brightness(0.88);transform:scale(0.95)}
+.nav-a{
+  background:#ccccdd;color:#444;border:none;cursor:pointer;
+  border-radius:3px;font-size:9px;user-select:none;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 0 rgba(0,0,0,0.15);
+}
+.nav-a:active{filter:brightness(0.88)}
+.nav-ud{width:100%;height:12px}
+.nav-lr{width:26px;height:26px}
+.row{display:flex;gap:2.5px;margin-bottom:2.5px}
+.row>.btn{flex:1;min-height:24px}
+.row-undo{display:flex;gap:2.5px;margin-bottom:2.5px}
+.sep{height:1px;background:#ccc;margin:4px 0}
+</style>
+</head>
+<body>
+<div id="scaleRoot">
+<div class="calc" id="theCalc">
+
+  <div class="top-bar" style="display:none"></div>
+  <div class="solar"></div>
+
+  <div class="disp">
+    <!-- 履歴エリア（直近3件、伸びた分に表示） -->
+    <div class="disp-history" id="dHistory"></div>
+    <!-- 現在の式・結果 -->
+    <div class="disp-current">
+      <div class="disp-flags">
+        <span id="fM"  style="display:none">M</span>
+        <span id="fSh" style="display:none">SHIFT</span>
+        <span id="fAl" style="display:none">ALPHA</span>
+        <span style="margin-left:auto" id="fDeg">DEG</span>
+      </div>
+      <div class="disp-expr" id="dExpr"><span class="cursor"></span></div>
+      <div class="disp-main" id="dMain">0</div>
+    </div>
+  </div>
+
+  <!-- Row1 -->
+  <div class="row" style="align-items:center">
+    <button class="btn c-dk" id="B_SHIFT" style="min-height:28px"><span class="sl">STAT</span><span class="ml">Shift</span></button>
+    <button class="btn c-dk" id="B_ALPHA" style="min-height:28px"><span class="al">DISTR</span><span class="ml">Alpha</span></button>
+    <div style="flex:2;display:flex;justify-content:center">
+      <div class="nav-ring">
+        <div></div>
+        <button class="nav-a nav-ud" id="B_UP">▲</button>
+        <div></div>
+        <button class="nav-a nav-lr" id="B_LEFT">◀</button>
+        <button class="nav-c" id="B_COPY">Copy</button>
+        <button class="nav-a nav-lr" id="B_RIGHT">▶</button>
+        <div></div>
+        <button class="nav-a nav-ud" id="B_DOWN">▼</button>
+        <div></div>
+      </div>
+    </div>
+    <button class="btn c-dk" id="B_MODE" style="min-height:28px"><span class="sl">Q→r</span><span class="ml">MODE</span></button>
+    <button class="btn c-re" id="B_ONAC" style="min-height:28px"><span class="sl">Q→…</span><span class="ml">ON/CA</span></button>
+  </div>
+
+  <!-- Undo -->
+  <div class="row-undo" style="justify-content:center">
+    <button class="btn c-dk" id="B_UNDO" style="min-height:16px;padding:2px 18px;font-size:8px;font-weight:600;color:#88aaff">Undo</button>
+  </div>
+
+  <!-- Row2 -->
+  <div class="row">
+    <button class="btn c-dk" id="B_GCD" ><span class="sl">↑ENG</span><span class="ml" style="font-size:8px">GCD</span></button>
+    <button class="btn c-dk" id="B_LCM" ><span class="sl">ENG</span><span class="ml" style="font-size:8px">LCM</span></button>
+    <button class="btn c-dk" id="B_XINV"><span class="sl">x⁻¹</span><span class="ml">x⁻¹</span></button>
+    <button class="btn c-dk" id="B_XCBP"><span class="sl">x⁻³</span><span class="ml">x⁻³</span></button>
+    <button class="btn c-dk" id="B_DC"  ><span class="sl">d/c</span><span class="ml">d/c</span></button>
+    <button class="btn c-dk" id="B_SQRT"><span class="sl">√</span><span class="ml">√</span></button>
+    <button class="btn c-dk" id="B_CBRT"><span class="sl">³√</span><span class="ml">³√</span></button>
+    <button class="btn c-dk" id="B_X2"  ><span class="sl">x²</span><span class="ml">x²</span></button>
+    <button class="btn c-dk" id="B_POW" ><span class="sl">xʸ</span><span class="ml">xʸ</span></button>
+    <button class="btn c-dk" id="B_LOG" ><span class="sl">10ˣ</span><span class="ml">log</span></button>
+    <button class="btn c-dk" id="B_EXP" ><span class="sl">eˣ</span><span class="ml">eˣ</span></button>
+    <button class="btn c-dk" id="B_ECON"><span class="ml" style="font-size:8px">e</span></button>
+    <button class="btn c-dk" id="B_LN"  ><span class="sl">eˣ</span><span class="ml">ln</span></button>
+  </div>
+
+  <!-- Row3 -->
+  <div class="row">
+    <button class="btn c-dk" id="B_NEG" ><span class="ml">(−)</span></button>
+    <button class="btn c-dk" id="B_PI"  ><span class="al">π</span><span class="ml">π</span></button>
+    <button class="btn c-dk" id="B_ASIN"><span class="al">sin⁻¹</span><span class="ml" style="font-size:8px">sin⁻¹</span></button>
+    <button class="btn c-dk" id="B_ACOS"><span class="al">cos⁻¹</span><span class="ml" style="font-size:8px">cos⁻¹</span></button>
+    <button class="btn c-dk" id="B_ATAN"><span class="al">tan⁻¹</span><span class="ml" style="font-size:8px">tan⁻¹</span></button>
+    <button class="btn c-bl" id="B_SIN" ><span class="sl">sin⁻¹</span><span class="ml">sin</span></button>
+    <button class="btn c-bl" id="B_COS" ><span class="sl">cos⁻¹</span><span class="ml">cos</span></button>
+    <button class="btn c-bl" id="B_TAN" ><span class="sl">tan⁻¹</span><span class="ml">tan</span></button>
+  </div>
+
+  <!-- Row4 -->
+  <div class="row">
+    <button class="btn c-dk" id="B_STO"  ><span class="sl">S-PTS</span><span class="ml">STO</span></button>
+    <button class="btn c-dk" id="B_PCT"  ><span class="sl">S-SUM</span><span class="ml">%</span></button>
+    <button class="btn c-dk" id="B_LP"   ><span class="sl">S-VAR</span><span class="ml">(</span></button>
+    <button class="btn c-dk" id="B_RP"   ><span class="sl">Ins</span><span class="ml">)</span></button>
+    <button class="btn c-dk" id="B_CLR"  ><span class="sl" style="color:#ff8888">CLR</span><span class="ml">CLR</span></button>
+    <button class="btn c-dk" id="B_ABS"  ><span class="ml" style="font-size:8px">Abs</span></button>
+    <button class="btn c-dk" id="B_DATA" ><span class="ml" style="font-size:8px">Data</span></button>
+    <button class="btn c-or" id="B_MPLUS"><span class="sl">M−</span><span class="ml">M+</span></button>
+  </div>
+
+  <!-- Row5 -->
+  <div class="row">
+    <button class="btn c-dk" id="B_RCL"             ><span class="ml">RCL</span></button>
+    <button class="btn c-dk" id="B_NCR"  style="flex:2"><span class="sl">nPr</span><span class="ml">ⁿCᵣ</span></button>
+    <button class="btn c-dk" id="B_REC"  style="flex:2"><span class="sl">Poll</span><span class="ml" style="font-size:8px">Rec(</span></button>
+    <button class="btn c-or" id="B_DEL"  style="flex:2"><span class="ml">DEL</span></button>
+    <button class="btn c-re" id="B_CE"   style="flex:2"><span class="ml">CE/C</span></button>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- Row6 -->
+  <div class="row">
+    <button class="btn c-gy" id="B_7"    style="flex:3"><span class="sl">ROUND</span><span class="ml" style="font-size:16px">7</span></button>
+    <button class="btn c-gy" id="B_8"    style="flex:3"><span class="sl">Rand</span><span class="ml" style="font-size:16px">8</span></button>
+    <button class="btn c-gy" id="B_9"    style="flex:3"><span class="sl">i-Rand</span><span class="ml" style="font-size:16px">9</span></button>
+    <button class="btn c-or" id="B_DIV"  style="flex:2"><span class="ml" style="font-size:16px">÷</span></button>
+    <button class="btn c-dk" id="B_RECI" style="flex:2"><span class="sl">nCr</span><span class="ml" style="font-size:8px">Reci</span></button>
+  </div>
+
+  <!-- Row7 -->
+  <div class="row">
+    <button class="btn c-gy" id="B_4"    style="flex:3"><span class="ml" style="font-size:16px">4</span></button>
+    <button class="btn c-gy" id="B_5"    style="flex:3"><span class="ml" style="font-size:16px">5</span></button>
+    <button class="btn c-gy" id="B_6"    style="flex:3"><span class="ml" style="font-size:16px">6</span></button>
+    <button class="btn c-or" id="B_MUL"  style="flex:2"><span class="ml" style="font-size:16px">×</span></button>
+    <button class="btn c-dk" id="B_REC2" style="flex:2"><span class="sl">Rec(</span><span class="ml" style="font-size:8px">Rec(</span></button>
+  </div>
+
+  <!-- Row8 -->
+  <div class="row">
+    <button class="btn c-gy" id="B_1"   style="flex:3"><span class="ml" style="font-size:16px">1</span></button>
+    <button class="btn c-gy" id="B_2"   style="flex:3"><span class="ml" style="font-size:16px">2</span></button>
+    <button class="btn c-gy" id="B_3"   style="flex:3"><span class="ml" style="font-size:16px">3</span></button>
+    <button class="btn c-or" id="B_SUB" style="flex:2"><span class="ml" style="font-size:16px">−</span></button>
+    <button class="btn c-dk" id="B_DRG" style="flex:2"><span class="sl">DRG▸</span><span class="ml" style="font-size:8px">DRG▸</span></button>
+  </div>
+
+  <!-- Row9 -->
+  <div class="row">
+    <button class="btn c-gy" id="B_0"    style="flex:2"><span class="ml" style="font-size:16px">0</span></button>
+    <button class="btn c-dk" id="B_DOT"  style="flex:2"><span class="sl">Rand</span><span class="ml">.</span></button>
+    <button class="btn c-dk" id="B_EXPK" style="flex:2"><span class="sl">π</span><span class="ml">EXP</span></button>
+    <button class="btn c-or" id="B_ADD"  style="flex:2"><span class="ml" style="font-size:16px">+</span></button>
+    <button class="btn c-dk" id="B_ANS"  style="flex:2"><span class="sl">←</span><span class="ml">Ans</span></button>
+    <button class="btn c-re" id="B_EQ"   style="flex:2"><span class="ml" style="font-size:18px">=</span></button>
+  </div>
+
+</div><!-- .calc -->
+</div><!-- #scaleRoot -->
+
+<script>
+let expr='',curPos=0,lastResult=0,mem=0;
+let shiftOn=false,alphaOn=false,angleMode='DEG';
+let history=[],afterEquals=false;
+
+const dExpr=document.getElementById('dExpr');
+const dMain=document.getElementById('dMain');
+const dHistory=document.getElementById('dHistory');
+const fSh=document.getElementById('fSh');
+const fAl=document.getElementById('fAl');
+const fDeg=document.getElementById('fDeg');
+const fMem=document.getElementById('fM');
+
+/* 履歴表示（直近3件）*/
+function updHistory(){
+  const show=history.slice(-3);
+  dHistory.innerHTML=show.map(h=>
+    `<div class="hist-item">${esc(h.expr)} = ${esc(fmt(h.result))}</div>`
+  ).join('');
+}
+
+function updDisp(){
+  const b=expr.slice(0,curPos),a=expr.slice(curPos);
+  dExpr.innerHTML=esc(b)+'<span class="cursor"></span>'+esc(a);
+  dExpr.scrollLeft=dExpr.scrollWidth;
+}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function updFlags(){
+  fSh.style.display=shiftOn?'inline':'none';
+  fAl.style.display=alphaOn?'inline':'none';
+  fDeg.textContent=angleMode;
+  fMem.style.display=mem!==0?'inline':'none';
+}
+function fmt(v){
+  if(!isFinite(v)||isNaN(v))return 'Math ERROR';
+  const av=Math.abs(v);
+  if(av>=1e10||(av<1e-9&&av>0))
+    return v.toExponential(6).replace('e+','×10^').replace('e-','×10^-');
+  return String(parseFloat(v.toPrecision(10)));
+}
+function flash(id){
+  const el=document.getElementById(id);if(!el)return;
+  el.classList.add('pressed');setTimeout(()=>el.classList.remove('pressed'),120);
+}
+
+function ins(s){
+  if(afterEquals){
+    if(/^[0-9.πe]$/.test(s)||s==='Ans'){expr='';curPos=0;}
+    else{expr=fmt(lastResult);curPos=expr.length;}
+    afterEquals=false;
+  }
+  expr=expr.slice(0,curPos)+s+expr.slice(curPos);
+  curPos+=s.length;updDisp();
+}
+function insFn(open,close){
+  if(afterEquals){expr='';curPos=0;afterEquals=false;}
+  expr=expr.slice(0,curPos)+open+close+expr.slice(curPos);
+  curPos+=open.length;updDisp();
+}
+function insPost(s){
+  if(afterEquals){expr='';curPos=0;afterEquals=false;}
+  expr=expr.slice(0,curPos)+s+expr.slice(curPos);
+  curPos+=s.length;updDisp();
+}
+function toggleNeg(){
+  if(afterEquals){expr=fmt(lastResult);curPos=expr.length;afterEquals=false;}
+  const before=expr.slice(0,curPos);
+  const m=before.match(/(-?\d*\.?\d+)$/);
+  if(m){
+    const num=m[1],st=curPos-num.length;
+    const tog=num.startsWith('-')?num.slice(1):'-'+num;
+    expr=expr.slice(0,st)+tog+expr.slice(curPos);
+    curPos=st+tog.length;
+  }else{ins('-');return;}
+  updDisp();
+}
+function moveCur(d){curPos=Math.max(0,Math.min(expr.length,curPos+d));updDisp();}
+function doBS(){
+  if(afterEquals){doCE();return;}
+  if(curPos>0){expr=expr.slice(0,curPos-1)+expr.slice(curPos);curPos--;}
+  updDisp();
+}
+function doCE(){expr='';curPos=0;afterEquals=false;dMain.textContent='0';updDisp();}
+function doOnAC(){doCE();mem=0;shiftOn=false;alphaOn=false;history=[];updHistory();updFlags();}
+function doAns(){
+  if(afterEquals){expr='';curPos=0;afterEquals=false;}
+  expr=expr.slice(0,curPos)+'Ans'+expr.slice(curPos);
+  curPos+=3;updDisp();
+}
+function doEquals(){
+  if(!expr.trim())return;
+  history.push({expr,result:lastResult});
+  try{
+    const r=evalExpr(expr);
+    lastResult=isFinite(r)?r:lastResult;
+    dMain.textContent=fmt(r);
+    afterEquals=true;
+  }catch(e){dMain.textContent='Math ERROR';}
+  updHistory();
+  updDisp();
+}
+function doSTO(){mem=lastResult;updFlags();}
+function doRCL(){
+  if(afterEquals){expr='';curPos=0;afterEquals=false;}
+  const s=fmt(mem);
+  expr=expr.slice(0,curPos)+s+expr.slice(curPos);
+  curPos+=s.length;updDisp();
+}
+function doMplus(){mem+=lastResult;updFlags();}
+function doShift(){shiftOn=!shiftOn;alphaOn=false;updFlags();}
+function doAlpha(){alphaOn=!alphaOn;shiftOn=false;updFlags();}
+function doCopy(){try{navigator.clipboard.writeText(dMain.textContent);}catch(e){}}
+function cycleAngle(){angleMode=angleMode==='DEG'?'RAD':angleMode==='RAD'?'GRA':'DEG';updFlags();}
+function doUndo(){
+  if(history.length>0){
+    const h=history.pop();
+    expr=h.expr;curPos=expr.length;
+    lastResult=h.result;dMain.textContent=fmt(h.result);
+    afterEquals=false;updDisp();
+  }
+}
+function navUp(){if(history.length>0){const h=history[history.length-1];expr=h.expr;curPos=expr.length;updDisp();}}
+
+function toRad(x){return angleMode==='DEG'?x*Math.PI/180:angleMode==='GRA'?x*Math.PI/200:x;}
+function fromRad(x){return angleMode==='DEG'?x*180/Math.PI:angleMode==='GRA'?x*200/Math.PI:x;}
+
+function evalExpr(raw){
+  let s=raw
+    .replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-')
+    .replace(/π/g,'('+Math.PI+')')
+    .replace(/Ans/g,'('+lastResult+')')
+    .replace(/²/g,'^2')
+    .replace(/E([+\-]?\d+)/g,'*10^($1)');
+  s=s.replace(/([\d\)\²])\s*\(/g,'$1*(');
+  s=s
+    .replace(/sin⁻¹/g,'__asin').replace(/cos⁻¹/g,'__acos').replace(/tan⁻¹/g,'__atan')
+    .replace(/sin/g,'__sin').replace(/cos/g,'__cos').replace(/tan/g,'__tan')
+    .replace(/ln/g,'__ln').replace(/log/g,'__log10')
+    .replace(/√/g,'__sqrt').replace(/∛/g,'__cbrt')
+    .replace(/Abs/g,'__abs').replace(/e\^\(/g,'__exp(');
+  s=s.replace(/([\d\)])\s*(__\w+)/g,'$1*$2');
+  for(let i=0;i<5;i++){
+    s=s.replace(/((?:\([^()]*\)|\d+\.?\d*))(\^)((?:\-?\([^()]*\)|\-?\d+\.?\d*))/g,'Math.pow($1,$3)');
+  }
+  s=s.replace(/([\d\)])\s*%/g,'($1/100)');
+  const fnMap={
+    '__sin':v=>Math.sin(toRad(v)),'__cos':v=>Math.cos(toRad(v)),'__tan':v=>Math.tan(toRad(v)),
+    '__asin':v=>fromRad(Math.asin(v)),'__acos':v=>fromRad(Math.acos(v)),'__atan':v=>fromRad(Math.atan(v)),
+    '__ln':v=>Math.log(v),'__log10':v=>Math.log10(v),
+    '__sqrt':v=>Math.sqrt(v),'__cbrt':v=>Math.cbrt(v),
+    '__abs':v=>Math.abs(v),'__exp':v=>Math.exp(v),
+  };
+  const defs=Object.keys(fnMap).map(k=>`const ${k}=fnMap['${k}'];`).join('');
+  return new Function('fnMap','Math',`"use strict";${defs}return (${s});`)(fnMap,Math);
+}
+
+const btnActions={
+  B_SHIFT:doShift, B_ALPHA:doAlpha,
+  B_UP:navUp, B_LEFT:()=>moveCur(-1), B_RIGHT:()=>moveCur(1), B_DOWN:()=>{},
+  B_COPY:doCopy, B_MODE:cycleAngle, B_ONAC:doOnAC, B_UNDO:doUndo,
+  B_GCD:()=>insFn('GCD(',',)'), B_LCM:()=>insFn('LCM(',',)'),
+  B_XINV:()=>insPost('^(-1)'), B_XCBP:()=>insPost('^(-3)'), B_DC:()=>{},
+  B_SQRT:()=>insFn('√(',')'), B_CBRT:()=>insFn('∛(',')'),
+  B_X2:()=>insPost('²'), B_POW:()=>ins('^'),
+  B_LOG:()=>insFn('log(',')'), B_EXP:()=>insFn('e^(',')'),
+  B_ECON:()=>ins('e'), B_LN:()=>insFn('ln(',')'),
+  B_NEG:toggleNeg, B_PI:()=>ins('π'),
+  B_ASIN:()=>insFn('sin⁻¹(',')'), B_ACOS:()=>insFn('cos⁻¹(',')'), B_ATAN:()=>insFn('tan⁻¹(',')'),
+  B_SIN:()=>insFn('sin(',')'), B_COS:()=>insFn('cos(',')'), B_TAN:()=>insFn('tan(',')'),
+  B_STO:doSTO, B_PCT:()=>ins('%'), B_LP:()=>ins('('), B_RP:()=>ins(')'),
+  B_CLR:doCE, B_ABS:()=>insFn('Abs(',')'), B_DATA:()=>{}, B_MPLUS:doMplus,
+  B_RCL:doRCL, B_NCR:()=>insFn('C(',',)'), B_REC:()=>insFn('Rec(',',)'),
+  B_DEL:doBS, B_CE:doCE,
+  B_7:()=>ins('7'), B_8:()=>ins('8'), B_9:()=>ins('9'),
+  B_DIV:()=>ins('÷'), B_RECI:()=>insFn('1/(',')'),
+  B_4:()=>ins('4'), B_5:()=>ins('5'), B_6:()=>ins('6'),
+  B_MUL:()=>ins('×'), B_REC2:()=>insFn('Rec(',',)'),
+  B_1:()=>ins('1'), B_2:()=>ins('2'), B_3:()=>ins('3'),
+  B_SUB:()=>ins('−'), B_DRG:cycleAngle,
+  B_0:()=>ins('0'), B_DOT:()=>ins('.'), B_EXPK:()=>ins('E'),
+  B_ADD:()=>ins('+'), B_ANS:doAns, B_EQ:doEquals,
+};
+
+Object.entries(btnActions).forEach(([id,fn])=>{
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.addEventListener('pointerdown',e=>{e.preventDefault();fn();});
+});
+
+const keyAct={
+  '0':()=>ins('0'),'1':()=>ins('1'),'2':()=>ins('2'),'3':()=>ins('3'),
+  '4':()=>ins('4'),'5':()=>ins('5'),'6':()=>ins('6'),'7':()=>ins('7'),
+  '8':()=>ins('8'),'9':()=>ins('9'),'.':()=>ins('.'),
+  '+':()=>{flash('B_ADD');ins('+');},'=':()=>{flash('B_EQ');doEquals();},
+  '-':()=>{flash('B_SUB');ins('−');},'*':()=>{flash('B_MUL');ins('×');},
+  '/':()=>{flash('B_DIV');ins('÷');},'(':()=>ins('('),')':()=>ins(')'),
+  '^':()=>ins('^'),'%':()=>ins('%'),
+  'Enter':()=>{flash('B_EQ');doEquals();},
+  'Backspace':()=>{flash('B_DEL');doBS();},
+  'Delete':()=>{flash('B_CE');doCE();},
+  'Escape':()=>{flash('B_ONAC');doOnAC();},
+  'ArrowLeft':()=>moveCur(-1),'ArrowRight':()=>moveCur(1),'ArrowUp':()=>navUp(),
+};
+const codeAct={
+  'Numpad0':()=>ins('0'),'Numpad1':()=>ins('1'),'Numpad2':()=>ins('2'),
+  'Numpad3':()=>ins('3'),'Numpad4':()=>ins('4'),'Numpad5':()=>ins('5'),
+  'Numpad6':()=>ins('6'),'Numpad7':()=>ins('7'),'Numpad8':()=>ins('8'),
+  'Numpad9':()=>ins('9'),'NumpadDecimal':()=>ins('.'),
+  'NumpadAdd':()=>{flash('B_ADD');ins('+');},
+  'NumpadSubtract':()=>{flash('B_SUB');ins('−');},
+  'NumpadMultiply':()=>{flash('B_MUL');ins('×');},
+  'NumpadDivide':()=>{flash('B_DIV');ins('÷');},
+  'NumpadEnter':()=>{flash('B_EQ');doEquals();},
+};
+document.addEventListener('keydown',e=>{
+  if(document.activeElement&&document.activeElement.tagName==='INPUT')return;
+  if(codeAct[e.code]){e.preventDefault();codeAct[e.code]();return;}
+  if(keyAct[e.key]){e.preventDefault();keyAct[e.key]();return;}
+});
+
+/* ============================================================
+   自動スケール
+   ・電卓の幅320pxを画面幅いっぱいにスケール（横基準）
+   ・ディスプレイ高さはvhの35%を上限、それ以上は伸びない
+   ・結果的にボタンエリアが画面の65%以上を占めて押しやすくなる
+   ・Windowsなど横長画面では従来通り縦横両方で収まるスケール
+   ============================================================ */
+function autoScale(){
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const calcEl = document.getElementById('theCalc');
+  const dispEl = document.querySelector('.disp');
+
+  /* 1) まず横幅基準でスケール計算 */
+  const scaleByW = vw / 320;
+
+  /* 2) そのスケールでボタン部の高さを推定し、画面に収まるか確認 */
+  /*    ディスプレイ高さ上限 = vh の35% / scale */
+  const dispMaxH = (vh * 0.20) / scaleByW;
+
+  /* 3) ディスプレイ高さに上限を適用 */
+  dispEl.style.height = dispMaxH + 'px';
+  dispEl.style.maxHeight = dispMaxH + 'px';
+  dispEl.style.minHeight = Math.min(dispMaxH, 90) + 'px';
+
+  /* 4) 電卓全体の高さを測定（ディスプレイ固定後） */
+  const calcH = calcEl.offsetHeight;
+
+  /* 5) 縦にも収まるスケールを計算し、小さい方を採用
+        → スマホ縦長では横幅基準、PCでは縦横どちらか小さい方 */
+  const scaleByH = vh / calcH;
+  const scale = Math.min(scaleByW, scaleByH) * 0.98;
+
+  /* 6) 画面中央に配置 */
+  const scaledW = 320 * scale;
+  const scaledH = calcH * scale;
+  const offsetX = (vw - scaledW) / 2;
+  const offsetY = (vh - scaledH) / 2;
+
+  const root = document.getElementById('scaleRoot');
+  root.style.transform = `translate(${offsetX}px, ${Math.max(0,offsetY)}px) scale(${scale})`;
+}
+window.addEventListener('resize',autoScale);
+window.addEventListener('load',autoScale);
+requestAnimationFrame(()=>requestAnimationFrame(autoScale));
+
+updDisp();
+updFlags();
+updHistory();
+
+// PWA: Service Worker登録
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .catch(err => console.log('SW registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>
