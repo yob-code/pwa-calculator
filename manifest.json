@@ -2,7 +2,7 @@
   "name": "calculator",
   "short_name": "pwa-calculator",
   "description": "関数電卓",
-  "start_url": "./calculator.html",
+  "start_url": "/pwa-calculator/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#111111",
