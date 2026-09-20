@@ -7,7 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="calculator">
-<meta name="theme-color" content="#f0f0f0">
+<meta name="theme-color" content="#1c1c1c">
+<meta name="color-scheme" content="dark">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <title>calculator</title>
@@ -15,7 +16,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{
   width:100%;height:100%;
-  background:#e8e8e8;
+  background:#111111;
   display:flex;align-items:flex-start;justify-content:center;
   overflow:hidden;
   touch-action:none;
@@ -25,14 +26,14 @@ html,body{
   position:absolute;top:0;left:0;
 }
 .calc{
-  background:#f0f0f0;
+  background:#1c1c1c;
   border-radius:12px 12px 20px 20px;
   padding:10px 12px 18px;
   width:320px;
   display:flex;
   flex-direction:column;
-  border:2px solid #ccc;
-  box-shadow:0 8px 32px rgba(0,0,0,0.25);
+  border:2px solid #333;
+  box-shadow:0 8px 32px rgba(0,0,0,0.6);
 }
 .top-bar{
   display:flex;justify-content:space-between;align-items:center;
@@ -40,18 +41,13 @@ html,body{
 }
 .brand-l{color:#666;font-size:10px;font-style:italic;letter-spacing:2px;font-family:serif}
 .brand-r{color:#444;font-size:10px;letter-spacing:2px;font-family:sans-serif}
-.solar{
-  background:repeating-linear-gradient(90deg,#b0b8d0 0px,#b0b8d0 18px,#9098b8 18px,#9098b8 20px);
-  height:13px;border-radius:2px;margin-bottom:6px;border:1px solid #aaa;
-  flex-shrink:0;
-}
 .disp{
-  background:#d4e8d4;
+  background:#8fb98f;
   border-radius:6px;
   padding:7px 10px 6px;
   margin-bottom:8px;
-  border:2px solid #8aaa8a;
-  box-shadow:inset 0 2px 8px rgba(0,0,0,0.12);
+  border:2px solid #5f8a5f;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.25);
   flex-shrink:0;
   display:flex;
   flex-direction:column;
@@ -64,19 +60,19 @@ html,body{
 }
 .hist-item{
   font-family:'Courier New',monospace;font-size:11px;
-  color:#4a7a4a;text-align:right;line-height:1.55;
+  color:#24502a;text-align:right;line-height:1.55;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   padding:0 2px;opacity:0.75;
 }
 .hist-item+.hist-item{opacity:0.88}
 .hist-item:last-child{
-  opacity:1;color:#2a5a2a;
-  border-top:1px solid rgba(0,0,0,0.1);
+  opacity:1;color:#143a18;
+  border-top:1px solid rgba(0,0,0,0.15);
   padding-top:2px;margin-top:2px;
 }
 .disp-current{flex-shrink:0}
 .disp-flags{
-  display:flex;gap:7px;font-size:9px;color:#3a5a3a;
+  display:flex;gap:7px;font-size:9px;color:#1f3f22;
   font-family:'Courier New',monospace;min-height:13px;font-weight:600;
 }
 .disp-expr{
@@ -101,24 +97,26 @@ html,body{
   align-items:center;justify-content:center;
   border-radius:4px;user-select:none;
   line-height:1;padding:2px 1px;
-  box-shadow:0 2px 0 rgba(0,0,0,0.2),0 1px 2px rgba(0,0,0,0.1);
+  box-shadow:0 2px 0 rgba(0,0,0,0.55),0 1px 2px rgba(0,0,0,0.3);
   transition:box-shadow 0.06s,transform 0.06s,filter 0.06s;
 }
 .btn:active,.btn.pressed{
-  box-shadow:0 0px 0 rgba(0,0,0,0.2)!important;
+  box-shadow:0 0px 0 rgba(0,0,0,0.55)!important;
   transform:translateY(2px)!important;
-  filter:brightness(0.88)!important;
+  filter:brightness(1.35)!important;
 }
-.sl{font-size:6.5px;min-height:8px;line-height:1;color:#aa7700}
-.al{font-size:6.5px;min-height:8px;line-height:1;color:#226622}
+.sl{font-size:6.5px;min-height:8px;line-height:1;color:#e0a030}
+.c-or .sl,.c-bl .sl{color:#ffe7b3}
+.al{font-size:6.5px;min-height:8px;line-height:1;color:#66bb66}
 .ml{font-size:9.5px;font-weight:700;line-height:1}
-.bl{font-size:6px;min-height:7px;line-height:1;color:#999}
-/* ホワイト版ボタンカラー */
-.c-dk{background:#dcdcec;color:#222}
-.c-bl{background:#4a80cc;color:#fff}
-.c-gy{background:#e8e8f0;color:#333}
-.c-or{background:#e06820;color:#fff}
-.c-re{background:#cc3333;color:#fff}
+.btn.off{opacity:.35}
+.bl{font-size:6px;min-height:7px;line-height:1;color:#888}
+/* ダークモード ボタンカラー（アイコンの配色に合わせる） */
+.c-dk{background:#2b2b3c;color:#e6e6f0}
+.c-bl{background:#3a68a8;color:#fff}
+.c-gy{background:#3d3f54;color:#f2f2f7}
+.c-or{background:#c44a00;color:#fff}
+.c-re{background:#a82828;color:#fff}
 .nav-ring{
   display:grid;
   grid-template-columns:26px 1fr 26px;
@@ -126,26 +124,26 @@ html,body{
   gap:2px;justify-items:center;align-items:center;
 }
 .nav-c{
-  background:radial-gradient(circle,#5588dd,#3366bb);
+  background:radial-gradient(circle,#4a78bd,#2f5590);
   color:#fff;border-radius:50%;width:26px;height:26px;
   display:flex;align-items:center;justify-content:center;
   font-size:7px;font-weight:700;cursor:pointer;border:none;
-  user-select:none;box-shadow:0 2px 4px rgba(0,0,0,0.25);
+  user-select:none;box-shadow:0 2px 4px rgba(0,0,0,0.5);
 }
-.nav-c:active{filter:brightness(0.88);transform:scale(0.95)}
+.nav-c:active{filter:brightness(1.3);transform:scale(0.95)}
 .nav-a{
-  background:#ccccdd;color:#444;border:none;cursor:pointer;
+  background:#3d3f54;color:#dcdce8;border:none;cursor:pointer;
   border-radius:3px;font-size:9px;user-select:none;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 1px 0 rgba(0,0,0,0.15);
+  box-shadow:0 1px 0 rgba(0,0,0,0.5);
 }
-.nav-a:active{filter:brightness(0.88)}
+.nav-a:active{filter:brightness(1.3)}
 .nav-ud{width:100%;height:12px}
 .nav-lr{width:26px;height:26px}
 .row{display:flex;gap:2.5px;margin-bottom:2.5px}
 .row>.btn{flex:1;min-height:24px}
 .row-undo{display:flex;gap:2.5px;margin-bottom:2.5px}
-.sep{height:1px;background:#ccc;margin:4px 0}
+.sep{height:1px;background:#333;margin:4px 0}
 </style>
 </head>
 <body>
@@ -153,7 +151,6 @@ html,body{
 <div class="calc" id="theCalc">
 
   <div class="top-bar" style="display:none"></div>
-  <div class="solar"></div>
 
   <div class="disp">
     <!-- 履歴エリア（直近3件、伸びた分に表示） -->
@@ -173,8 +170,8 @@ html,body{
 
   <!-- Row1 -->
   <div class="row" style="align-items:center">
-    <button class="btn c-dk" id="B_SHIFT" style="min-height:28px"><span class="sl">STAT</span><span class="ml">Shift</span></button>
-    <button class="btn c-dk" id="B_ALPHA" style="min-height:28px"><span class="al">DISTR</span><span class="ml">Alpha</span></button>
+    <button class="btn c-dk" id="B_SHIFT" style="min-height:28px"><span class="sl"></span><span class="ml">Shift</span></button>
+    <button class="btn c-dk off" id="B_ALPHA" style="min-height:28px"><span class="al"></span><span class="ml">Alpha</span></button>
     <div style="flex:2;display:flex;justify-content:center">
       <div class="nav-ring">
         <div></div>
@@ -188,8 +185,8 @@ html,body{
         <div></div>
       </div>
     </div>
-    <button class="btn c-dk" id="B_MODE" style="min-height:28px"><span class="sl">Q→r</span><span class="ml">MODE</span></button>
-    <button class="btn c-re" id="B_ONAC" style="min-height:28px"><span class="sl">Q→…</span><span class="ml">ON/CA</span></button>
+    <button class="btn c-dk" id="B_MODE" style="min-height:28px"><span class="sl"></span><span class="ml">MODE</span></button>
+    <button class="btn c-re" id="B_ONAC" style="min-height:28px"><span class="sl"></span><span class="ml">ON/CA</span></button>
   </div>
 
   <!-- Undo -->
@@ -199,17 +196,17 @@ html,body{
 
   <!-- Row2 -->
   <div class="row">
-    <button class="btn c-dk" id="B_GCD" ><span class="sl">↑ENG</span><span class="ml" style="font-size:8px">GCD</span></button>
-    <button class="btn c-dk" id="B_LCM" ><span class="sl">ENG</span><span class="ml" style="font-size:8px">LCM</span></button>
-    <button class="btn c-dk" id="B_XINV"><span class="sl">x⁻¹</span><span class="ml">x⁻¹</span></button>
-    <button class="btn c-dk" id="B_XCBP"><span class="sl">x⁻³</span><span class="ml">x⁻³</span></button>
-    <button class="btn c-dk" id="B_DC"  ><span class="sl">d/c</span><span class="ml">d/c</span></button>
-    <button class="btn c-dk" id="B_SQRT"><span class="sl">√</span><span class="ml">√</span></button>
-    <button class="btn c-dk" id="B_CBRT"><span class="sl">³√</span><span class="ml">³√</span></button>
-    <button class="btn c-dk" id="B_X2"  ><span class="sl">x²</span><span class="ml">x²</span></button>
-    <button class="btn c-dk" id="B_POW" ><span class="sl">xʸ</span><span class="ml">xʸ</span></button>
+    <button class="btn c-dk" id="B_GCD" ><span class="sl"></span><span class="ml" style="font-size:8px">GCD</span></button>
+    <button class="btn c-dk" id="B_LCM" ><span class="sl"></span><span class="ml" style="font-size:8px">LCM</span></button>
+    <button class="btn c-dk" id="B_XINV"><span class="sl"></span><span class="ml">x⁻¹</span></button>
+    <button class="btn c-dk" id="B_XCBP"><span class="sl"></span><span class="ml">x⁻³</span></button>
+    <button class="btn c-dk off" id="B_DC"  ><span class="sl"></span><span class="ml">d/c</span></button>
+    <button class="btn c-dk" id="B_SQRT"><span class="sl"></span><span class="ml">√</span></button>
+    <button class="btn c-dk" id="B_CBRT"><span class="sl"></span><span class="ml">³√</span></button>
+    <button class="btn c-dk" id="B_X2"  ><span class="sl"></span><span class="ml">x²</span></button>
+    <button class="btn c-dk" id="B_POW" ><span class="sl"></span><span class="ml">xʸ</span></button>
     <button class="btn c-dk" id="B_LOG" ><span class="sl">10ˣ</span><span class="ml">log</span></button>
-    <button class="btn c-dk" id="B_EXP" ><span class="sl">eˣ</span><span class="ml">eˣ</span></button>
+    <button class="btn c-dk" id="B_EXP" ><span class="sl"></span><span class="ml">eˣ</span></button>
     <button class="btn c-dk" id="B_ECON"><span class="ml" style="font-size:8px">e</span></button>
     <button class="btn c-dk" id="B_LN"  ><span class="sl">eˣ</span><span class="ml">ln</span></button>
   </div>
@@ -217,10 +214,10 @@ html,body{
   <!-- Row3 -->
   <div class="row">
     <button class="btn c-dk" id="B_NEG" ><span class="ml">(−)</span></button>
-    <button class="btn c-dk" id="B_PI"  ><span class="al">π</span><span class="ml">π</span></button>
-    <button class="btn c-dk" id="B_ASIN"><span class="al">sin⁻¹</span><span class="ml" style="font-size:8px">sin⁻¹</span></button>
-    <button class="btn c-dk" id="B_ACOS"><span class="al">cos⁻¹</span><span class="ml" style="font-size:8px">cos⁻¹</span></button>
-    <button class="btn c-dk" id="B_ATAN"><span class="al">tan⁻¹</span><span class="ml" style="font-size:8px">tan⁻¹</span></button>
+    <button class="btn c-dk" id="B_PI"  ><span class="al"></span><span class="ml">π</span></button>
+    <button class="btn c-dk" id="B_ASIN"><span class="al"></span><span class="ml" style="font-size:8px">sin⁻¹</span></button>
+    <button class="btn c-dk" id="B_ACOS"><span class="al"></span><span class="ml" style="font-size:8px">cos⁻¹</span></button>
+    <button class="btn c-dk" id="B_ATAN"><span class="al"></span><span class="ml" style="font-size:8px">tan⁻¹</span></button>
     <button class="btn c-bl" id="B_SIN" ><span class="sl">sin⁻¹</span><span class="ml">sin</span></button>
     <button class="btn c-bl" id="B_COS" ><span class="sl">cos⁻¹</span><span class="ml">cos</span></button>
     <button class="btn c-bl" id="B_TAN" ><span class="sl">tan⁻¹</span><span class="ml">tan</span></button>
@@ -228,13 +225,13 @@ html,body{
 
   <!-- Row4 -->
   <div class="row">
-    <button class="btn c-dk" id="B_STO"  ><span class="sl">S-PTS</span><span class="ml">STO</span></button>
-    <button class="btn c-dk" id="B_PCT"  ><span class="sl">S-SUM</span><span class="ml">%</span></button>
-    <button class="btn c-dk" id="B_LP"   ><span class="sl">S-VAR</span><span class="ml">(</span></button>
-    <button class="btn c-dk" id="B_RP"   ><span class="sl">Ins</span><span class="ml">)</span></button>
-    <button class="btn c-dk" id="B_CLR"  ><span class="sl" style="color:#ff8888">CLR</span><span class="ml">CLR</span></button>
+    <button class="btn c-dk" id="B_STO"  ><span class="sl"></span><span class="ml">STO</span></button>
+    <button class="btn c-dk" id="B_PCT"  ><span class="sl"></span><span class="ml">%</span></button>
+    <button class="btn c-dk" id="B_LP"   ><span class="sl"></span><span class="ml">(</span></button>
+    <button class="btn c-dk" id="B_RP"   ><span class="sl"></span><span class="ml">)</span></button>
+    <button class="btn c-dk" id="B_CLR"  ><span class="sl" style="color:#ff8888"></span><span class="ml">CLR</span></button>
     <button class="btn c-dk" id="B_ABS"  ><span class="ml" style="font-size:8px">Abs</span></button>
-    <button class="btn c-dk" id="B_DATA" ><span class="ml" style="font-size:8px">Data</span></button>
+    <button class="btn c-dk off" id="B_DATA" ><span class="ml" style="font-size:8px">Data</span></button>
     <button class="btn c-or" id="B_MPLUS"><span class="sl">M−</span><span class="ml">M+</span></button>
   </div>
 
@@ -242,7 +239,7 @@ html,body{
   <div class="row">
     <button class="btn c-dk" id="B_RCL"             ><span class="ml">RCL</span></button>
     <button class="btn c-dk" id="B_NCR"  style="flex:2"><span class="sl">nPr</span><span class="ml">ⁿCᵣ</span></button>
-    <button class="btn c-dk" id="B_REC"  style="flex:2"><span class="sl">Poll</span><span class="ml" style="font-size:8px">Rec(</span></button>
+    <button class="btn c-dk off" id="B_REC"  style="flex:2"><span class="sl"></span><span class="ml" style="font-size:8px">Rec(</span></button>
     <button class="btn c-or" id="B_DEL"  style="flex:2"><span class="ml">DEL</span></button>
     <button class="btn c-re" id="B_CE"   style="flex:2"><span class="ml">CE/C</span></button>
   </div>
@@ -251,11 +248,11 @@ html,body{
 
   <!-- Row6 -->
   <div class="row">
-    <button class="btn c-gy" id="B_7"    style="flex:3"><span class="sl">ROUND</span><span class="ml" style="font-size:16px">7</span></button>
-    <button class="btn c-gy" id="B_8"    style="flex:3"><span class="sl">Rand</span><span class="ml" style="font-size:16px">8</span></button>
-    <button class="btn c-gy" id="B_9"    style="flex:3"><span class="sl">i-Rand</span><span class="ml" style="font-size:16px">9</span></button>
+    <button class="btn c-gy" id="B_7"    style="flex:3"><span class="sl"></span><span class="ml" style="font-size:16px">7</span></button>
+    <button class="btn c-gy" id="B_8"    style="flex:3"><span class="sl"></span><span class="ml" style="font-size:16px">8</span></button>
+    <button class="btn c-gy" id="B_9"    style="flex:3"><span class="sl"></span><span class="ml" style="font-size:16px">9</span></button>
     <button class="btn c-or" id="B_DIV"  style="flex:2"><span class="ml" style="font-size:16px">÷</span></button>
-    <button class="btn c-dk" id="B_RECI" style="flex:2"><span class="sl">nCr</span><span class="ml" style="font-size:8px">Reci</span></button>
+    <button class="btn c-dk" id="B_RECI" style="flex:2"><span class="sl"></span><span class="ml" style="font-size:8px">Reci</span></button>
   </div>
 
   <!-- Row7 -->
@@ -264,7 +261,7 @@ html,body{
     <button class="btn c-gy" id="B_5"    style="flex:3"><span class="ml" style="font-size:16px">5</span></button>
     <button class="btn c-gy" id="B_6"    style="flex:3"><span class="ml" style="font-size:16px">6</span></button>
     <button class="btn c-or" id="B_MUL"  style="flex:2"><span class="ml" style="font-size:16px">×</span></button>
-    <button class="btn c-dk" id="B_REC2" style="flex:2"><span class="sl">Rec(</span><span class="ml" style="font-size:8px">Rec(</span></button>
+    <button class="btn c-dk off" id="B_REC2" style="flex:2"><span class="sl"></span><span class="ml" style="font-size:8px">Rec(</span></button>
   </div>
 
   <!-- Row8 -->
@@ -273,16 +270,16 @@ html,body{
     <button class="btn c-gy" id="B_2"   style="flex:3"><span class="ml" style="font-size:16px">2</span></button>
     <button class="btn c-gy" id="B_3"   style="flex:3"><span class="ml" style="font-size:16px">3</span></button>
     <button class="btn c-or" id="B_SUB" style="flex:2"><span class="ml" style="font-size:16px">−</span></button>
-    <button class="btn c-dk" id="B_DRG" style="flex:2"><span class="sl">DRG▸</span><span class="ml" style="font-size:8px">DRG▸</span></button>
+    <button class="btn c-dk" id="B_DRG" style="flex:2"><span class="sl"></span><span class="ml" style="font-size:8px">DRG▸</span></button>
   </div>
 
   <!-- Row9 -->
   <div class="row">
     <button class="btn c-gy" id="B_0"    style="flex:2"><span class="ml" style="font-size:16px">0</span></button>
-    <button class="btn c-dk" id="B_DOT"  style="flex:2"><span class="sl">Rand</span><span class="ml">.</span></button>
+    <button class="btn c-dk" id="B_DOT"  style="flex:2"><span class="sl"></span><span class="ml">.</span></button>
     <button class="btn c-dk" id="B_EXPK" style="flex:2"><span class="sl">π</span><span class="ml">EXP</span></button>
     <button class="btn c-or" id="B_ADD"  style="flex:2"><span class="ml" style="font-size:16px">+</span></button>
-    <button class="btn c-dk" id="B_ANS"  style="flex:2"><span class="sl">←</span><span class="ml">Ans</span></button>
+    <button class="btn c-dk" id="B_ANS"  style="flex:2"><span class="sl"></span><span class="ml">Ans</span></button>
     <button class="btn c-re" id="B_EQ"   style="flex:2"><span class="ml" style="font-size:18px">=</span></button>
   </div>
 
@@ -371,7 +368,7 @@ function doBS(){
   if(curPos>0){expr=expr.slice(0,curPos-1)+expr.slice(curPos);curPos--;}
   updDisp();
 }
-function doCE(){expr='';curPos=0;afterEquals=false;dMain.textContent='0';updDisp();}
+function doCE(){expr='';curPos=0;afterEquals=false;hp=-1;dMain.textContent='0';updDisp();}
 function doOnAC(){doCE();mem=0;shiftOn=false;alphaOn=false;history=[];updHistory();updFlags();}
 function doAns(){
   if(afterEquals){expr='';curPos=0;afterEquals=false;}
@@ -380,6 +377,7 @@ function doAns(){
 }
 function doEquals(){
   if(!expr.trim())return;
+  hp=-1;
   history.push({expr,result:lastResult});
   try{
     const r=evalExpr(expr);
@@ -410,13 +408,25 @@ function doUndo(){
     afterEquals=false;updDisp();
   }
 }
-function navUp(){if(history.length>0){const h=history[history.length-1];expr=h.expr;curPos=expr.length;updDisp();}}
+let hp=-1;   // 履歴ブラウズ位置（-1=未使用）
+function navUp(){
+  if(!history.length)return;
+  hp=hp<0?history.length-1:Math.max(0,hp-1);
+  expr=history[hp].expr;curPos=expr.length;afterEquals=false;updDisp();
+}
+function navDown(){
+  if(hp<0)return;
+  if(hp<history.length-1){hp++;expr=history[hp].expr;}
+  else{hp=-1;expr='';}
+  curPos=expr.length;afterEquals=false;updDisp();
+}
 
 function toRad(x){return angleMode==='DEG'?x*Math.PI/180:angleMode==='GRA'?x*Math.PI/200:x;}
 function fromRad(x){return angleMode==='DEG'?x*180/Math.PI:angleMode==='GRA'?x*200/Math.PI:x;}
 
 function evalExpr(raw){
   let s=raw
+    .replace(/e(?!\^\()/g,'('+Math.E+')')
     .replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-')
     .replace(/π/g,'('+Math.PI+')')
     .replace(/Ans/g,'('+lastResult+')')
@@ -424,18 +434,30 @@ function evalExpr(raw){
     .replace(/E([+\-]?\d+)/g,'*10^($1)');
   s=s.replace(/([\d\)\²])\s*\(/g,'$1*(');
   s=s
+    .replace(/sin(?!⁻¹)/g,'__sin').replace(/cos(?!⁻¹)/g,'__cos').replace(/tan(?!⁻¹)/g,'__tan')
     .replace(/sin⁻¹/g,'__asin').replace(/cos⁻¹/g,'__acos').replace(/tan⁻¹/g,'__atan')
-    .replace(/sin/g,'__sin').replace(/cos/g,'__cos').replace(/tan/g,'__tan')
     .replace(/ln/g,'__ln').replace(/log/g,'__log10')
     .replace(/√/g,'__sqrt').replace(/∛/g,'__cbrt')
-    .replace(/Abs/g,'__abs').replace(/e\^\(/g,'__exp(');
+    .replace(/Abs/g,'__abs').replace(/e\^\(/g,'__exp(')
+    .replace(/GCD/g,'__gcd').replace(/LCM/g,'__lcm')
+    .replace(/C\(/g,'__ncr(').replace(/P\(/g,'__npr(');
   s=s.replace(/([\d\)])\s*(__\w+)/g,'$1*$2');
   for(let i=0;i<5;i++){
     s=s.replace(/((?:\([^()]*\)|\d+\.?\d*))(\^)((?:\-?\([^()]*\)|\-?\d+\.?\d*))/g,'Math.pow($1,$3)');
   }
   s=s.replace(/([\d\)])\s*%/g,'($1/100)');
+  /* sin(180°)=1.2e-16 のような丸め誤差を0に、tan(90°)等は Math ERROR にする */
+  const snap=v=>Math.abs(v)<1e-14?0:v;
+  const isInt=v=>Number.isInteger(v);
+  const gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a;};
+  const chkNr=(n,r)=>{if(!isInt(n)||!isInt(r)||r<0||r>n)throw new Error('nr');};
   const fnMap={
-    '__sin':v=>Math.sin(toRad(v)),'__cos':v=>Math.cos(toRad(v)),'__tan':v=>Math.tan(toRad(v)),
+    '__sin':v=>snap(Math.sin(toRad(v))),'__cos':v=>snap(Math.cos(toRad(v))),
+    '__tan':v=>{const r=toRad(v);if(Math.abs(Math.cos(r))<1e-14)throw new Error('tan');return snap(Math.tan(r));},
+    '__gcd':(a,b)=>{if(!isInt(a)||!isInt(b))throw new Error('int');return gcd(a,b);},
+    '__lcm':(a,b)=>{if(!isInt(a)||!isInt(b))throw new Error('int');return (a===0||b===0)?0:Math.abs(a*b)/gcd(a,b);},
+    '__ncr':(n,r)=>{chkNr(n,r);let v=1;for(let i=1;i<=r;i++)v=v*(n-r+i)/i;return Math.round(v);},
+    '__npr':(n,r)=>{chkNr(n,r);let v=1;for(let i=1;i<=r;i++)v*=(n-r+i);return v;},
     '__asin':v=>fromRad(Math.asin(v)),'__acos':v=>fromRad(Math.acos(v)),'__atan':v=>fromRad(Math.atan(v)),
     '__ln':v=>Math.log(v),'__log10':v=>Math.log10(v),
     '__sqrt':v=>Math.sqrt(v),'__cbrt':v=>Math.cbrt(v),
@@ -446,8 +468,8 @@ function evalExpr(raw){
 }
 
 const btnActions={
-  B_SHIFT:doShift, B_ALPHA:doAlpha,
-  B_UP:navUp, B_LEFT:()=>moveCur(-1), B_RIGHT:()=>moveCur(1), B_DOWN:()=>{},
+  B_SHIFT:doShift, B_ALPHA:()=>{},
+  B_UP:navUp, B_LEFT:()=>moveCur(-1), B_RIGHT:()=>moveCur(1), B_DOWN:navDown,
   B_COPY:doCopy, B_MODE:cycleAngle, B_ONAC:doOnAC, B_UNDO:doUndo,
   B_GCD:()=>insFn('GCD(',',)'), B_LCM:()=>insFn('LCM(',',)'),
   B_XINV:()=>insPost('^(-1)'), B_XCBP:()=>insPost('^(-3)'), B_DC:()=>{},
@@ -460,22 +482,38 @@ const btnActions={
   B_SIN:()=>insFn('sin(',')'), B_COS:()=>insFn('cos(',')'), B_TAN:()=>insFn('tan(',')'),
   B_STO:doSTO, B_PCT:()=>ins('%'), B_LP:()=>ins('('), B_RP:()=>ins(')'),
   B_CLR:doCE, B_ABS:()=>insFn('Abs(',')'), B_DATA:()=>{}, B_MPLUS:doMplus,
-  B_RCL:doRCL, B_NCR:()=>insFn('C(',',)'), B_REC:()=>insFn('Rec(',',)'),
+  B_RCL:doRCL, B_NCR:()=>insFn('C(',',)'), B_REC:()=>{},
   B_DEL:doBS, B_CE:doCE,
   B_7:()=>ins('7'), B_8:()=>ins('8'), B_9:()=>ins('9'),
   B_DIV:()=>ins('÷'), B_RECI:()=>insFn('1/(',')'),
   B_4:()=>ins('4'), B_5:()=>ins('5'), B_6:()=>ins('6'),
-  B_MUL:()=>ins('×'), B_REC2:()=>insFn('Rec(',',)'),
+  B_MUL:()=>ins('×'), B_REC2:()=>{},
   B_1:()=>ins('1'), B_2:()=>ins('2'), B_3:()=>ins('3'),
   B_SUB:()=>ins('−'), B_DRG:cycleAngle,
   B_0:()=>ins('0'), B_DOT:()=>ins('.'), B_EXPK:()=>ins('E'),
   B_ADD:()=>ins('+'), B_ANS:doAns, B_EQ:doEquals,
 };
 
+/* Shift＋キー：副ラベルが表示されているキーのみ有効。他のキーはShiftを解除して通常動作 */
+const shiftActs={
+  B_SIN:()=>insFn('sin⁻¹(',')'), B_COS:()=>insFn('cos⁻¹(',')'), B_TAN:()=>insFn('tan⁻¹(',')'),
+  B_LOG:()=>insFn('10^(',')'),   B_LN:()=>insFn('e^(',')'),
+  B_MPLUS:()=>{mem-=lastResult;updFlags();},
+  B_EXPK:()=>ins('π'),           B_NCR:()=>insFn('P(',',)'),
+};
 Object.entries(btnActions).forEach(([id,fn])=>{
   const el=document.getElementById(id);
   if(!el)return;
-  el.addEventListener('pointerdown',e=>{e.preventDefault();fn();});
+  el.addEventListener('pointerdown',e=>{
+    e.preventDefault();
+    if(shiftOn&&id!=='B_SHIFT'){
+      const sf=shiftActs[id];
+      shiftOn=false;updFlags();
+      (sf||fn)();
+      return;
+    }
+    fn();
+  });
 });
 
 const keyAct={
@@ -561,8 +599,15 @@ updHistory();
 
 // PWA: Service Worker登録
 if('serviceWorker' in navigator){
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  /* 新しいService Workerが有効化されたら1回だけ自動リロード */
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if(hadController && !reloaded){ reloaded = true; location.reload(); }
+  });
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
+      .then(reg => reg.update())
       .catch(err => console.log('SW registration failed:', err));
   });
 }
